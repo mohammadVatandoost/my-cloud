@@ -1,1 +1,4 @@
-variable "image_pull_secret" { type= string } 
+variable "image_pull_secret" {
+     type= string 
+     default = ""
+} 
