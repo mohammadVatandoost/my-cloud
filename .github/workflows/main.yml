@@ -52,10 +52,17 @@ jobs:
     - name: Terraform Init
       run: terraform init 
 
+    - name: Echo vars 1
+      run: echo ${{ env.TF_VAR_IMAGE_PULL_SECRET }}
+
+    - name: Echo vars 2
+      run: echo ${{ env.TF_VAR_CLUSTER_NAME }}   
+
     # Generates an execution plan for Terraform   -input=false
     - name: Terraform Plan
       env:
-        TF_image_pull_secret: ${{ secrets.DOCKER_REPOSITORY_ACCESS_TOKEN }}
+        TF_VAR_IMAGE_PULL_SECRET: ${{ env.TF_VAR_IMAGE_PULL_SECRET }}
+        TF_VAR_CLUSTER_NAME: ${{ env.TF_VAR_CLUSTER_NAME }}
       run: terraform plan
 
       # On push to "main", build or change infrastructure according to Terraform configuration files
