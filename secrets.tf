@@ -5,7 +5,7 @@ resource "null_resource" "k8s-managed" {
 
   provisioner "local-exec" {
     when    = create
-    command = " ./k8s.sh"
+    command = " kubectl apply -f k8s/secrets.yaml"
     environment = {
       prep_k8s_file = templatefile("${path.module}/.templates/secrets.tmpl", {
         mvatandoost-dockerhub              = base64encode("${var.image_pull_secret}")
