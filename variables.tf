@@ -8,10 +8,10 @@ variable "cluster_name" {
      default = ""
 } 
 
-output printimage_pull_secret {
-        value = "Hello, ${var.image_pull_secret}"
-}
+# output printimage_pull_secret {
+#         value = "Hello, ${var.image_pull_secret}"
+# }
 
-output printcluster_name{
-        value = "Hello, ${var.cluster_name}"
-}
+# output printcluster_name{
+#         value = "Hello, ${var.cluster_name}"
+# }
