@@ -54,12 +54,6 @@ jobs:
     - name: Terraform Init
       run: terraform init 
 
-    - name: Echo vars 1
-      run: echo ${{ env.TF_VAR_IMAGE_PULL_SECRET }}
-
-    - name: Echo vars 2
-      run: echo ${{ env.TF_VAR_CLUSTER_NAME }}   
-
     # Generates an execution plan for Terraform   -input=false
     - name: Terraform Plan
       env:
