@@ -11,6 +11,9 @@ env:
   TF_VAR_IMAGE_PULL_SECRET: ${{ secrets.TF_VAR_IMAGE_PULL_SECRET }}
   TF_VAR_CLUSTER_NAME: ${{ vars.TF_VAR_CLUSTER_NAME }}
   CLUSTER_NAME: ${{ vars.CLUSTER_NAME }}
+  CLUSTER_ZONE: ${{ vars.CLUSTER_ZONE }}
+  PROJECT_NUMBER: ${{ vars.PROJECT_NUMBER }}
+  PROJECT_ID: ${{ vars.PROJECT_ID }}
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
@@ -30,17 +33,32 @@ jobs:
         shell: bash
 
     steps:
-    # Checkout the repository to the GitHub Actions runner
+
     - name: Checkout
       uses: actions/checkout@v3
 
-    - name: Install doctl
-      uses: digitalocean/action-doctl@v2
+    - id: 'auth'
+      name: 'Obtain access token by using workload identity federation'
+      uses: 'google-github-actions/auth@v0'
       with:
-        token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+        create_credentials_file: true
+        token_format: access_token
+        workload_identity_provider: projects/${{ env.PROJECT_NUMBER }}/locations/global/workloadIdentityPools/github-actions/providers/github-actions-oidc
+        service_account: github-actions-workflow@${{ env.PROJECT_ID }}.iam.gserviceaccount.com
+    - name: Connect to GKE
+      uses: google-github-actions/get-gke-credentials@v0
+      with:
+        cluster_name: ${{ env.CLUSTER_NAME }}
+        location: ${{ env.CLUSTER_ZONE }}
+
+
+    # - name: Install doctl
+    #   uses: digitalocean/action-doctl@v2
+    #   with:
+    #     token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
   
-    - name: Save DigitalOcean kubeconfig with short-lived credentials
-      run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 ${{ env.CLUSTER_NAME }}
+    # - name: Save DigitalOcean kubeconfig with short-lived credentials
+    #   run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 ${{ env.CLUSTER_NAME }}
 
 
      # Install the latest version of Terraform CLI and configure the Terraform CLI configuration.
