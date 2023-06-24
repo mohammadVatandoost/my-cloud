@@ -45,16 +45,19 @@ jobs:
       name: 'Obtain access token by using workload identity federation'
       uses: 'google-github-actions/auth@v0'
       with:
-        create_credentials_file: true
-        token_format: access_token
-        workload_identity_provider: projects/${{ env.PROJECT_NUMBER }}/locations/global/workloadIdentityPools/my-pool/providers/my-provider
-        service_account: github-actions-workflow@${{ env.PROJECT_ID }}.iam.gserviceaccount.com
+        # create_credentials_file: true
+        # token_format: access_token
+        # workload_identity_provider: projects/${{ env.PROJECT_NUMBER }}/locations/global/workloadIdentityPools/my-pool/providers/my-provider
+        # service_account: github-actions-workflow@${{ env.PROJECT_ID }}.iam.gserviceaccount.com
+        credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
     - name: Connect to GKE
       uses: google-github-actions/get-gke-credentials@v0
       with:
         cluster_name: ${{ env.CLUSTER_NAME }}
         location: ${{ env.CLUSTER_ZONE }}
-
+        
+    - id: 'get-pods'
+      run: 'kubectl get pods'
 
     # - name: Install doctl
     #   uses: digitalocean/action-doctl@v2
