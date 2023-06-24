@@ -55,9 +55,12 @@ jobs:
       with:
         cluster_name: ${{ env.CLUSTER_NAME }}
         location: ${{ env.CLUSTER_ZONE }}
-        
+
     - id: 'get-pods'
-      run: 'kubectl get pods'
+      run: 'kubectl get all --all-namespaces'
+
+    # - id: 'kube-config'
+    #   run: 'ls ~/.kube/config'  
 
     # - name: Install doctl
     #   uses: digitalocean/action-doctl@v2
